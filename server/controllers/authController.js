@@ -6,8 +6,17 @@ const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
-    if (!name || !email || !password) {
+    if (!name?.trim() || !email?.trim() || !password?.trim()) {
       return res.status(400).json({ msg: "All fields required" });
+    }
+
+    if (password.trim().length < 4) {
+      return res.status(400).json({ msg: "Password must be at least 4 characters" });
+    }
+
+    const emailRegex = /\S+@\S+\.\S+/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ msg: "Invalid email format" });
     }
 
     const existing = await User.findOne({ email });
@@ -48,8 +57,17 @@ const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    if (!email || !password) {
+    if (!email?.trim() || !password?.trim()) {
       return res.status(400).json({ msg: "All fields required" });
+    }
+
+    if (password.trim().length < 4) {
+      return res.status(400).json({ msg: "Password must be at least 4 characters" });
+    }
+
+    const emailRegex = /\S+@\S+\.\S+/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ msg: "Invalid email format" });
     }
 
     const user = await User.findOne({ email });
