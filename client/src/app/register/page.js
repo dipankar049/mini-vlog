@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./register.module.css";
 import { useAuth } from "../context/AuthContext";
+import toast from "react-hot-toast";
 
 export default function Register() {
     const [form, setForm] = useState({
@@ -35,15 +36,15 @@ export default function Register() {
             const data = await res.json();
 
             if (!res.ok) {
-                return alert(data.msg || "Registration failed");
+                return toast.error(data.msg || "Registration failed");
             }
 
             login(data.token, data.user);
-            alert("Registered successfully");
+            toast.success("Registered successfully");
             router.replace("/");
         } catch (err) {
-            console.error("Register Error:", err);
-            alert("Something went wrong");
+            // console.error("Register Error:", err);
+            toast.error("Something went wrong");
         } finally {
             setLoading(false);
         }

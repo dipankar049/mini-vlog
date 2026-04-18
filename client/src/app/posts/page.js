@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import PostCard from "../components/PostCard";
 import styles from "./posts.module.css";
+import toast from "react-hot-toast";
 
 export default function Posts() {
     const { token } = useAuth();
@@ -18,7 +19,7 @@ export default function Posts() {
             const data = await res.json();
             setPosts(data.data);
         } catch (err) {
-            console.error("Fetch posts error:", err);
+            // console.error("Fetch posts error:", err);
         }
     };
 
@@ -28,6 +29,9 @@ export default function Posts() {
 
     const handleCreate = async (e) => {
         e.preventDefault();
+        if (!form.title?.trim() || !form.content?.trim()) {
+            return toast.error("All fields are required");
+        }
         setLoading(true);
 
         try {
@@ -42,12 +46,14 @@ export default function Posts() {
 
             const data = await res.json();
 
-            if (!res.ok) throw new Error(data.msg);
+            if (!res.ok) return toast.error(data.msg || "Failed to add post");
 
             fetchPosts();
+            toast.success("Post added successfully");
             setForm({ title: "", content: "" });
         } catch (err) {
-            console.error(err);
+            // console.error(err);
+            toast.error("Something went wrong");
         } finally {
             setLoading(false);
         }
@@ -62,11 +68,13 @@ export default function Posts() {
                 },
             });
 
-            if (!res.ok) throw new Error("Delete failed");
+            if (!res.ok) return toast.error(data.msg || "Failed to delete post");
 
             setPosts(posts.filter((p) => p._id !== id));
+            toast.success("Post deleted");
         } catch (err) {
-            console.error(err);
+            // console.error(err);
+            toast.error("Something went wrong");
         }
     };
 

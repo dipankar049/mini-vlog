@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./login.module.css";
 import { useAuth } from "../context/AuthContext";
+import toast from "react-hot-toast";
 
 export default function Login() {
   const [form, setForm] = useState({
@@ -34,15 +35,15 @@ export default function Login() {
       const data = await res.json();
 
       if (!res.ok) {
-        return alert(data.msg || "Login failed");
+        return toast.error(data.msg || "Login failed");
       }
 
       login(data.token, data.user);
-      alert("Login successful");
+      toast.success("Login successful");
       router.replace("/");
     } catch (err) {
-      console.error("Login Error:", err);
-      alert("Something went wrong");
+      // console.error("Login Error:", err);
+      toast.error("Something went wrong");
     } finally {
       setLoading(false);
     }
