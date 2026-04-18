@@ -10,6 +10,7 @@ export default function Posts() {
 
     const [posts, setPosts] = useState([]);
     const [form, setForm] = useState({ title: "", content: "" });
+    const [loading, setLoading] = useState(false);
 
     const fetchPosts = async () => {
         try {
@@ -27,6 +28,7 @@ export default function Posts() {
 
     const handleCreate = async (e) => {
         e.preventDefault();
+        setLoading(true);
 
         try {
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/posts`, {
@@ -46,6 +48,8 @@ export default function Posts() {
             setForm({ title: "", content: "" });
         } catch (err) {
             console.error(err);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -84,7 +88,7 @@ export default function Posts() {
                             setForm({ ...form, content: e.target.value })
                         }
                     />
-                    <button type="submit">Add Post</button>
+                    <button type="submit" disabled={loading}>Add Post</button>
                 </form>
             )}
 

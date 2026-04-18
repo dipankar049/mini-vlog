@@ -10,12 +10,14 @@ export default function Login() {
     email: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false);
   const { login } = useAuth();
 
   const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       const res = await fetch(
@@ -41,6 +43,8 @@ export default function Login() {
     } catch (err) {
       console.error("Login Error:", err);
       alert("Something went wrong");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -64,7 +68,7 @@ export default function Login() {
           }
         />
 
-        <button className={styles.button} type="submit">
+        <button className={styles.button} type="submit" disabled={loading}>
           Login
         </button>
       </form>

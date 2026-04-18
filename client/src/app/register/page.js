@@ -11,12 +11,14 @@ export default function Register() {
         email: "",
         password: "",
     });
+    const [loading, setLoading] = useState(false);
     const { login } = useAuth();
 
     const router = useRouter();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
 
         try {
             const res = await fetch(
@@ -42,6 +44,8 @@ export default function Register() {
         } catch (err) {
             console.error("Register Error:", err);
             alert("Something went wrong");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -69,7 +73,7 @@ export default function Register() {
                     onChange={(e) => setForm({ ...form, password: e.target.value })}
                 />
 
-                <button className={styles.button} type="submit">
+                <button className={styles.button} type="submit" disabled={loading}>
                     Register
                 </button>
             </form>
