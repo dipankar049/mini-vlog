@@ -28,7 +28,15 @@ const register = async (req, res) => {
       process.env.JWT_SECRET
     );
 
-    res.status(201).json({ token, msg: "Register successfull" });
+    res.status(201).json({
+      token,
+      user: {
+        id: user._id,
+        name,
+        email,
+      },
+      msg: "Register successfull"
+    });
 
   } catch (error) {
     console.error("Register Error:", error);
@@ -59,7 +67,15 @@ const login = async (req, res) => {
       process.env.JWT_SECRET
     );
 
-    res.status(200).json({ token, msg: "Login successfull" });
+    res.status(200).json({
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+      },
+      msg: "Login successfull"
+    });
 
   } catch (error) {
     console.error("Login Error:", error);
